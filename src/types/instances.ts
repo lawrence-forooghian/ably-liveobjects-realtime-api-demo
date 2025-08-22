@@ -139,7 +139,8 @@ export interface AnyInstance<T extends Value>
   value<T extends number | Primitive = number | Primitive>(): T | undefined;
 }
 
-// Instance represents a specific object instance on a channel.
+// Instance wraps a specific object instance or entry in a specific collection
+// object instance.
 // The type parameter specifies the underlying type of the instance,
 // and is used to infer the correct set of methods available for that type.
 export type Instance<T extends Value> = [T] extends [LiveMap<infer T>]

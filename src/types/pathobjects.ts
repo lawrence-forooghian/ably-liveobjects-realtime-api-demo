@@ -173,7 +173,7 @@ export interface AnyPathObject<T extends Value = Value>
   value<T extends number | Primitive = number | Primitive>(): T | undefined;
 }
 
-// PathObject represents a reference to a path from root object on a channel.
+// PathObject wraps a reference to a path from root object on a channel.
 // The type parameter specifies the underlying type defined at that path,
 // and is used to infer the correct set of methods available for that type.
 export type PathObject<T extends Value = Value> = [T] extends [LiveMap<infer T>]
