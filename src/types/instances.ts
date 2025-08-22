@@ -71,7 +71,8 @@ export interface LiveMapInstance<
     InstanceRuntimeTypeAssertions {
   // Navigate to a child object within the collection by obtaining the instance at that entry.
   // The entry in a LiveMap is identified with a string key.
-  get<K extends keyof T>(key: K): Instance<T[K]>;
+  // If not such entry exists, or if the referenced object cannot be resolved, returns `undefined`.
+  get<K extends keyof T>(key: K): Instance<T[K]> | undefined;
 }
 
 interface LiveListInstanceCollectionMethods<T extends Value = Value> {
@@ -86,7 +87,8 @@ export interface LiveListInstance<T extends Value = Value>
     InstanceRuntimeTypeAssertions {
   // Navigate to a child object within the collection by obtaining the instance at that entry.
   // The entry in a LiveList is identified with a number index.
-  get(index: number): Instance<T>;
+  // If not such entry exists, or if the referenced object cannot be resolved, returns `undefined`.
+  get(index: number): Instance<T> | undefined;
 }
 
 export interface LiveCounterInstance
@@ -101,8 +103,7 @@ export interface PrimitiveInstance<T extends Primitive = Primitive>
   extends InstanceBase<Primitive>,
     InstanceRuntimeTypeAssertions {
   // Get the current value of the primitive currently at this entry.
-  // If the entry does not exist, returns `undefined`.
-  value(): T | undefined;
+  value(): T;
 }
 
 interface AnyInstanceCollectionMethods {
