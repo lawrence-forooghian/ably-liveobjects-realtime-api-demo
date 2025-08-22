@@ -13,13 +13,7 @@ import type {
   LiveCounterInstance,
   AnyInstance,
 } from "./instances";
-import type { ObjectMessage, SubscriptionOptions } from "./subscriptions";
-
-// The type of the argument passed to the subscription callback.
-export type PathObjectSubscriptionEvent<T extends Value> = {
-  object: PathObject<T>;
-  message: ObjectMessage;
-};
+import type { Subscribable } from "./subscriptions";
 
 // Runtime type assertion methods that can check the underlying value at
 // at an entry at runtime and throw an error if it is not the expected type.
@@ -43,26 +37,9 @@ interface PathObjectCollectionMethods {
 // PathObjectBase defines the set of common methods on a PathObject
 // that are present regardless of the underlying type, which specified
 // in type parameter T.
-interface PathObjectBase<T extends Value> {
+interface PathObjectBase<T extends Value> extends Subscribable<T> {
   // the fully-qualified string path that this PathObject represents
   path(): string;
-
-  // Subscribe to the value that exists at this path.
-  // Subscriptions on a PathObject are made to whatever happens exists at a given path at any time.
-  // If the specific instance at that path changes, the subscription on the old instance is implicitly
-  // removed and a new subscription is established on the new instance.
-  // Subscriptions are deep by default, but depth can be configured via the provided options.
-  // The subscription observes changes to the value at the particular entry in a collection type specified
-  // by the path. If the entry contains a nested object, its changes will be observed; if the instance is
-  // replaced, changes to the new instance will be observed. If the entry contains a primitive, changes to
-  // the value of the entry will be observed.
-  subscribe(
-    callback: (event: PathObjectSubscriptionEvent<T>) => void,
-    options?: SubscriptionOptions,
-  ): () => void;
-  subscribeIterator(
-    options?: SubscriptionOptions,
-  ): AsyncIterableIterator<PathObjectSubscriptionEvent<T>>;
 
   objectMetadata(): ObjectMetadata | undefined;
   entryMetadata(): EntryMetadata | undefined;

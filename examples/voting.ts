@@ -23,9 +23,9 @@ async function votingExample() {
   );
 
   // Subscribe to real-time vote count changes
-  poll.get("votes").subscribe(({ object }) => {
-    const yes = object.get("yes").value() || 0;
-    const no = object.get("no").value() || 0;
+  poll.get("votes").subscribe(() => {
+    const yes = poll.get("votes").get("yes").value() || 0;
+    const no = poll.get("votes").get("no").value() || 0;
     const total = yes + no;
 
     if (total > 0) {

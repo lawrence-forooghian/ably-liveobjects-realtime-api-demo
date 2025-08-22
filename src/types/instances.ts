@@ -7,7 +7,7 @@ import type {
   LiveCounterOperations,
   AnyOperations,
 } from "./operations";
-import type { ObjectMessage, SubscriptionOptions } from "./subscriptions";
+import type { Subscribable, ObjectMessage } from "./subscriptions";
 
 // The type of the argument passed to the subscription callback.
 export type InstanceSubscriptionEvent<T extends Value> = {
@@ -30,28 +30,9 @@ interface InstanceRuntimeTypeAssertions {
 // InstanceBase defines the set of common methods on an Instance
 // that are present regardless of the underlying type, which specified
 // in type parameter T.
-interface InstanceBase<T extends Value> {
+interface InstanceBase<T extends Value> extends Subscribable<T> {
   // the object ID of this instance
   id(): string;
-
-  // Subscribe to the value that exists at this entry.
-  // Subscriptions on an Instance are made to the specific object instance at the entry at that time.
-  // Even if the subscribed object moves location, the subscription is maintained on the same instance.
-  // Subscriptions are deep by default, but depth can be configured via the provided options.
-  // The subscription observes changes to the value at the particular entry in a collection type specified
-  // by the key or index. If the entry contains a nested object, its changes will be observed; if the instance is
-  // replaced, changes to the new instance will be observed. If the entry contains a primitive, changes to
-  // the value of the entry will be observed.
-  // On an instance subscription, if an object is tombstoned (i.e. on receipt of an `OBJECT_DELETE` operation),
-  // the subscribe callback is invoked one final time with the `message` carrying the `OBJECT_DELETE` operation,
-  // and then the subscription is automatically unsubscribed.
-  subscribe(
-    callback: (event: InstanceSubscriptionEvent<T>) => void,
-    options?: SubscriptionOptions,
-  ): () => void;
-  subscribeIterator(
-    options?: SubscriptionOptions,
-  ): AsyncIterableIterator<InstanceSubscriptionEvent<T>>;
 
   objectMetadata(): ObjectMetadata | undefined;
   entryMetadata(): EntryMetadata | undefined;

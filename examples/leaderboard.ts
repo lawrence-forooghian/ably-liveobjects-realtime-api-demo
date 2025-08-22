@@ -30,13 +30,10 @@ async function main() {
   );
 
   // Subscribe to real-time score changes for a specific player
-  game
-    .get("players")
-    .get("alice")
-    .get("score")
-    .subscribe(async ({ object }) => {
-      console.log(`Alice: ${object.value()}`);
-    });
+  const score = game.get("players").get("alice").get("score");
+  score.subscribe(async () => {
+    console.log(`Alice: ${score.value()}`);
+  });
 
   // Simulate gameplay by incrementing scores
   await game.get("players").get("alice").get("score").increment(50);
@@ -50,8 +47,8 @@ async function main() {
   });
 
   // Subscribe to real-time leaderboard changes
-  game.get("players").subscribe(({ object }) => {
-    const leaderboard = [...object.values()];
+  game.get("players").subscribe(() => {
+    const leaderboard = [...game.get("players").values()];
     leaderboard.sort((a, b) =>
       (a.get("score").value() || 0) > (b.get("score").value() || 0) ? 1 : -1,
     );
