@@ -57,6 +57,8 @@ export interface PrimitiveBatchContext<T extends Primitive = Primitive> {
 
 export interface AnyBatchContext extends BatchOperations<AnyOperations> {}
 
+// BatchOperations makes all operation methods synchronous,
+// and removes the `batch` method.
 type BatchOperations<T> = {
   [K in keyof T as K extends "batch" ? never : K]: T[K] extends (
     this: infer This,

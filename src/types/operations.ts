@@ -13,11 +13,18 @@ export interface OperationOptions {
   encoding?: string;
 }
 
+interface BatchOperation<T extends LiveObject> {
+  // Batch multiple operations together using a batch context, which
+  // wraps the underlying PathObject or Instance that batch was called from.
+  // The batch context always contains a specific resolved instance, even
+  // if called from a PathObject. If a specific instance cannot be obtained
+  // from the referenced path, batch will throw an error.
+  batch(fn: (ctx: BatchContext<T>) => void): Promise<void>;
+}
+
 export interface LiveMapOperations<
   T extends Record<string, Value> = Record<string, Value>,
-> {
-  batch(fn: (ctx: BatchContext<LiveMap<T>>) => void): Promise<void>;
-
+> extends BatchOperation<LiveMap<T>> {
   set<K extends keyof T>(
     key: K,
     value: T[K],
@@ -26,9 +33,8 @@ export interface LiveMapOperations<
   remove(key: keyof T, options?: OperationOptions): Promise<void>;
 }
 
-export interface LiveListOperations<T extends Value = Value> {
-  batch(fn: (ctx: BatchContext<LiveList<T>>) => void): Promise<void>;
-
+export interface LiveListOperations<T extends Value = Value>
+  extends BatchOperation<LiveList<T>> {
   append(value: T, options?: OperationOptions): Promise<void>;
   prepend(value: T, options?: OperationOptions): Promise<void>;
   pop(options?: OperationOptions): Promise<void>;
@@ -37,14 +43,14 @@ export interface LiveListOperations<T extends Value = Value> {
   remove(index: number, options?: OperationOptions): Promise<void>;
 }
 
-export interface LiveCounterOperations {
-  batch(fn: (ctx: BatchContext<LiveCounter>) => void): Promise<void>;
-
+export interface LiveCounterOperations extends BatchOperation<LiveCounter> {
   increment(amount?: number, options?: OperationOptions): Promise<void>;
 }
 
 export interface AnyOperations {
-  batch(fn: (ctx: BatchContext<LiveObject>) => void): Promise<void>;
+  batch<T extends LiveObject = LiveObject>(
+    fn: (ctx: BatchContext<T>) => void,
+  ): Promise<void>;
 
   // LiveMap operations
   set<T extends Record<string, Value> = Record<string, Value>>(
@@ -81,14 +87,3 @@ export interface AnyOperations {
   // LiveCounter operations
   increment(amount?: number, options?: OperationOptions): Promise<void>;
 }
-
-export type BatchOperations<T> = {
-  [K in keyof T as K extends "batch" ? never : K]: T[K] extends (
-    this: infer This,
-    ...args: infer A
-  ) => PromiseLike<infer R>
-    ? (this: This, ...args: A) => R
-    : T[K] extends (this: infer This, ...args: infer A) => infer R
-      ? (this: This, ...args: A) => R
-      : T[K];
-};
