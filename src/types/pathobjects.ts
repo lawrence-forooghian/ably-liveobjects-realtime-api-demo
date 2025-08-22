@@ -83,6 +83,8 @@ export interface LiveMapPathObject<
   T extends Record<string, Value> = Record<string, Value>,
 > extends PathObjectBase<LiveMap<T>>,
     LiveMapPathObjectCollectionMethods<T>,
+    // if the underlying instance at a path cannot be resolved
+    // when an operation method is invoked, it will throw.
     LiveMapOperations<T>,
     PathObjectCollectionMethods,
     PathObjectRuntimeTypeAssertions {
@@ -102,8 +104,10 @@ interface LiveListPathObjectCollectionMethods<T extends Value = Value> {
 
 export interface LiveListPathObject<T extends Value = Value>
   extends PathObjectBase<LiveList<T>>,
-    LiveListOperations<T>,
     LiveListPathObjectCollectionMethods<T>,
+    // if the underlying instance at a path cannot be resolved
+    // when an operation method is invoked, it will throw.
+    LiveListOperations<T>,
     PathObjectCollectionMethods,
     PathObjectRuntimeTypeAssertions {
   // Navigate to a child path within the collection by obtaining a PathObject for that path.
@@ -117,6 +121,8 @@ export interface LiveListPathObject<T extends Value = Value>
 
 export interface LiveCounterPathObject
   extends PathObjectBase<LiveCounter>,
+    // if the underlying instance at a path cannot be resolved
+    // when an operation method is invoked, it will throw.
     LiveCounterOperations,
     PathObjectRuntimeTypeAssertions {
   // Get the current value of the counter instance currently at this path.
