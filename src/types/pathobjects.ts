@@ -21,14 +21,16 @@ export type PathObjectSubscriptionEvent<T extends Value> = {
   message: ObjectMessage;
 };
 
-// Runtime type assertion methods that can check the underlying LiveObject type
-// at a path at runtime and throw an error if it is not the expected type.
-// This is possible since the object ID includes the type of the object,
-// so the type can be determined even if the object instance can't (yet) be resolved.
+// Runtime type assertion methods that can check the underlying value at
+// at an entry at runtime and throw an error if it is not the expected type.
+// This is possible for nested objects since the object ID includes the type
+// of the object, so the type can be determined even if the object instance
+// can't (yet) be resolved.
 interface PathObjectRuntimeTypeAssertions {
   asLiveMap<T extends Record<string, Value>>(): PathObject<LiveMap<T>>;
   asLiveList<T extends Value>(): PathObject<LiveList<T>>;
   asLiveCounter(): PathObject<LiveCounter>;
+  asPrimitive<T extends Primitive>(): T;
 }
 
 // Collection types support obtaining a PathObject with a fully-qualified string path,

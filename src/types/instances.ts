@@ -15,14 +15,16 @@ export type InstanceSubscriptionEvent<T extends Value> = {
   message: ObjectMessage;
 };
 
-// Runtime type assertion methods that can check the underlying LiveObject type
-// at a path at runtime and throw an error if it is not the expected type.
-// This is possible since the object ID includes the type of the object,
-// so the type can be determined even if the object instance can't (yet) be resolved.
+// Runtime type assertion methods that can check the underlying value at
+// at an entry at runtime and throw an error if it is not the expected type.
+// This is possible for nested objects since the object ID includes the type
+// of the object, so the type can be determined even if the object instance
+// can't (yet) be resolved.
 interface InstanceRuntimeTypeAssertions {
   asLiveMap<T extends Record<string, Value>>(): Instance<LiveMap<T>>;
   asLiveList<T extends Value>(): Instance<LiveList<T>>;
   asLiveCounter(): Instance<LiveCounter>;
+  asPrimitive<T extends Primitive>(): T;
 }
 
 // InstanceBase defines the set of common methods on an Instance
