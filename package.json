@@ -1,0 +1,17 @@
+{
+  "name": "liveobjects-api-types",
+  "version": "1.0.0",
+  "description": "TypeScript types for exploring LiveObjects API ergonomics",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  }
+}
