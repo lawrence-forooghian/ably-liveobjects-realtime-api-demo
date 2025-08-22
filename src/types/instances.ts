@@ -42,6 +42,9 @@ interface InstanceBase<T extends Value> {
   // by the key or index. If the entry contains a nested object, its changes will be observed; if the instance is
   // replaced, changes to the new instance will be observed. If the entry contains a primitive, changes to
   // the value of the entry will be observed.
+  // On an instance subscription, if an object is tombstoned (i.e. on receipt of an `OBJECT_DELETE` operation),
+  // the subscribe callback is invoked one final time with the `message` carrying the `OBJECT_DELETE` operation,
+  // and then the subscription is automatically unsubscribed.
   subscribe(
     callback: (event: InstanceSubscriptionEvent<T>) => void,
     options?: SubscriptionOptions,
