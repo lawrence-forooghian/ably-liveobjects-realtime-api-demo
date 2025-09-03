@@ -82,14 +82,16 @@ export interface LiveCounterInstance
     LiveCounterOperations,
     InstanceRuntimeTypeAssertions {
   // Get the current value of the counter instance.
-  value(): number;
+  // Returns undefined if the current instance is not a leaf type.
+  value(): number | undefined;
 }
 
 export interface PrimitiveInstance<T extends Primitive = Primitive>
   extends InstanceBase<Primitive>,
     InstanceRuntimeTypeAssertions {
   // Get the current value of the primitive currently at this entry.
-  value(): T;
+  // Returns undefined if the current instance is not a leaf type.
+  value(): T | undefined;
 }
 
 interface AnyInstanceCollectionMethods {
