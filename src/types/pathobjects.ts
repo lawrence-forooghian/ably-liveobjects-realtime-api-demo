@@ -1,4 +1,4 @@
-import { Value, Primitive, LiveObject } from "./values";
+import { Value, Primitive } from "./values";
 import type { LiveMap, LiveList, LiveCounter } from "./values";
 import { ObjectMetadata, EntryMetadata } from "./metadata";
 import type {
@@ -93,7 +93,7 @@ export interface LiveListPathObject<T extends Value = Value>
 
   // Obtain the specific instance currently at this path.
   // If the path does not resolve to any specific instance, returns `undefined`.
-  instance(): LiveListInstance<T>;
+  instance(): LiveListInstance<T> | undefined;
 }
 
 export interface LiveCounterPathObject
