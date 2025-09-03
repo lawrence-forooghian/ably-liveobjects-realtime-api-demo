@@ -261,6 +261,13 @@ async function overview() {
   // Note however that this loses rich type inference.
   project.at("tasks[0].text").value(); // return type is `Primitive | undefined`, which is wider than `string | undefined`.
 
+  // You can specify a type parameter to bring back rich type inference.
+  // Of course, this does not guarantee the shape of the actual value at runtime.
+  project
+    .at<LiveMap<{ name: string; role: string }>>("owner")
+    .get("name")
+    .value();
+
   // Calling an operation method on a PathObject will evaluate the path at the time
   // the operation method is invoked. The client will attempt to follow each path
   // segment from the root and obtain the current value at that entry. If the entry is
