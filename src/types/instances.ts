@@ -92,6 +92,10 @@ export interface PrimitiveInstance<T extends Primitive = Primitive>
   // Get the current value of the primitive currently at this entry.
   // Returns undefined if the current instance is not a leaf type.
   value(): T | undefined;
+
+  // Obtain the client-supplied encoding that was specified when this entry was set.
+  // Only available for string and buffer primitives.
+  encoding: T extends string | Buffer ? () => string | undefined : never;
 }
 
 interface AnyInstanceCollectionMethods {

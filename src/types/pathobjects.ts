@@ -117,6 +117,10 @@ export interface PrimitivePathObject<T extends Primitive = Primitive>
   // Get the current value of the primitive currently at this path.
   // If the path does not resolve to any specific entry, returns `undefined`.
   value(): T | undefined;
+
+  // Obtain the client-supplied encoding that was specified when this entry was set.
+  // Only available for string and buffer primitives.
+  encoding: T extends string | Buffer ? () => string | undefined : never;
 }
 
 interface AnyPathObjectCollectionMethods {

@@ -66,6 +66,10 @@ export interface LiveCounterBatchContext
 export interface PrimitiveBatchContext<T extends Primitive = Primitive> {
   // Get the current value of the primitive currently at this entry.
   value(): T;
+
+  // Obtain the client-supplied encoding that was specified when this entry was set.
+  // Only available for string and buffer primitives.
+  encoding: T extends string | Buffer ? () => string | undefined : never;
 }
 
 export interface AnyBatchContext

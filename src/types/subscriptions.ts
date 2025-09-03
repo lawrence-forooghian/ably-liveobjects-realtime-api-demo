@@ -13,6 +13,7 @@ export interface ObjectMessage {
   };
   serial: number;
   siteCode: string;
+  encoding?: string;
 
   // payload provides a user-friendly representation
   // of the raw operation payload
