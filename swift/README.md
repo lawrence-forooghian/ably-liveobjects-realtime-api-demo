@@ -2,7 +2,7 @@
 
 I've had a go at converting most of the TypeScript interfaces and examples to Swift, and you can find the results in this directory. Have written some thoughts and challenges below.
 
-There are a few further thoughts, which I've not had a chance to formulate and write up here yet, dotted about the codebase in the form of TODOs. Probably some of them are also duplicates of what's here so I'd suggest ignoring them for now; I'll mop them up next week.
+There are some additional explanatory comments against the Swift code; search the code for `Lawrence`.
 
 ## Changes
 
@@ -22,6 +22,7 @@ Key changes here compared to TypeScript:
 
 - As I understand it, the `PathObjectRuntimeTypeAssertions` methods throw an error if the object at that path does not have the expected type at the moment of the assertion method being invoked. But I don't really understand the point in this; what does the user learn by the method not throwing? Isn't it just that the object at that path _currently_ has the expected type? But the type of that object could still change in the future, and subsequent calls to any of the type-specific methods might fail for that reason.
 - It is not yet fully clear to me from the TypeScript interface which method calls might throw an error. We need to know this for Swift because it has to be part of the interface. (Not a pressing need; I think I can infer a fair amount of it.)
+    - It's not clear to me whether `LiveCounterPathObject` and `PrimitivePathObject` has one or two failure modes — can it return `undefined` _or_ throw an error, or only return `undefined`?
 - It seems you can't set an _existing_ LiveObject as an entry in a `LiveMap` or `LiveList`. Is that correct? If so, is it intentional?
 - It's not clear to me whether the `Live{Map, Counter, List}` value types actually have data specific to an object instance inside them (i.e. an object ID), or if they're just a template for a creation operation, i.e. if you submit the same one multiple times do you end up with one LiveObject or multiple? I also still think that the names of these types are confusing; e.g. `LiveMap` is both used as a value type that describes a creation operation, and a special marker interface that indicates to the type system what static API it should expose, but it still doesn't seem super obvious that these two things should have the same name.
 - Could we perhaps rename the `value` method on `AnyPathObject` and `AnyInstance` to `leafValue`? I think that from the name it's not clear why this couldn't return a LiveObject. Also, currently the comment in `overview.ts` says "If a key does not exist on a LiveMap, `value()` returns undefined", but I think it means "If a key does not exist or the value is not a primitive value or a LiveCounter".
@@ -31,6 +32,7 @@ Key changes here compared to TypeScript:
 - When converting to Swift I preserved the ability for subscriptions to emit a generic `SubscriptionEvent` but it's not yet clear to me how this is going to be used (that interface doesn't currently make use of its generic type parameter).
 - Are the `asPrimitive()` type assertions also satisfied by a `LiveCounter` (i.e. do they treat a `LiveCounter` as a primitive of type `number`, the same way as the `value` methods elsewhere)?
 - What is the shape of the object returned by `ObjectMessage.payload`? It's currently just `any`. Ditto for the `compact` methods.
+- I don't understand the following comment on `LiveCounterInstance` and `PrimitiveInstance`: "Returns undefined if the current instance is not a leaf type." I thought that given an `Instance` of a specific static type then its type is already known (e.g. if I have a `LiveCounterInstance` then that means that the corresponding instance is a counter etc.)
 
 ## Challenges for Swift
 

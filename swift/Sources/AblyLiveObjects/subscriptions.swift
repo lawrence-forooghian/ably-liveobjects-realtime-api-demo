@@ -12,7 +12,7 @@ public protocol ObjectMessage {
     var siteCode: String { get }
     var encoding: String? { get }
 
-    // TODO: what is this?
+    // Lawrence: what is this?
     // payload provides a user-friendly representation
     // of the raw operation payload
     func payload() -> Any
@@ -20,7 +20,7 @@ public protocol ObjectMessage {
 
 // The type of the argument passed to the subscription callback.
 public protocol SubscriptionEvent<Data> {
-    // TODO: what is this used for?
+    // Lawrence: what is this used for?
     associatedtype Data
 
     var message: ObjectMessage { get }
@@ -71,7 +71,7 @@ public protocol Subscribable<EventData> {
     func subscribeAsyncSequence() -> any AsyncSequence<any SubscriptionEvent<EventData>, Never>
 }
 
-// TODO: Lawrence — added these because it seems we need them for the generic type parameter of SubscriptionEvent, even though it's not clear how that's being used yet. But I guess the they will have a non-optional type-specific field
+// Lawrence: added these because it seems we need them for the generic type parameter of SubscriptionEvent, even though it's not clear how that's being used yet. But I guess the they will have a non-optional type-specific field
 public struct LiveMapEventData {}
 public struct LiveCounterEventData {}
 public struct LiveListEventData {}

@@ -4,12 +4,9 @@
 // of the object, so the type can be determined even if the object instance
 // can't (yet) be resolved.
 public protocol PathObjectRuntimeTypeAssertions {
-    // TODO: confirm that the throwing happens when you try to use the methods, not now; actually that doesn't make sense because the primitive one returns primitive now. But what's to stop the value at that path changing later on? (Yeah, the examples.ts says "These methods will throw an error if the underlying type does not match what you expect", which doesn't seem that useful to me")
     func asLiveMap() throws -> any LiveMapPathObject
     func asLiveList() throws -> any LiveListPathObject
     func asLiveCounter() throws -> any LiveCounterPathObject
-    // TODO: does this one also return a counter's value?
-    // TODO: shouldn't this one return a PrimitivePathObject? Else how in Swift would you get the `encoding` out of a path object? Perhaps we should change it so that Primitive's `data` case is actually a struct with a `Data` and an `encoding`
     func asPrimitive() throws -> Primitive
 }
 
@@ -17,7 +14,7 @@ public protocol PathObjectRuntimeTypeAssertions {
 // which is evaluated from the current path.
 // Using this method loses rich compile-time type information.
 public protocol PathObjectCollectionMethods {
-    // TODO: note that in Swift there's not a whole lot of difference between using this or using UnionPathObject's get(key:) / get (at:), because in TS the latter two give you static type information that this doesn't, but in Swift none of them give you static type information
+    // Lawrence: note that in Swift there's not a whole lot of difference between using this or using UnionPathObject's get(key:) / get (at:), because in TS the latter two give you static type information that this doesn't, but in Swift none of them give you static type information
     func at(path: String) -> any UnionPathObject
 }
 
@@ -31,11 +28,11 @@ public protocol PathObjectBase<EventData>: Subscribable {
     var objectMetadata: ObjectMetadata? { get }
     var entryMetadata: EntryMetadata? { get }
 
-    // TODO: what is this
+    // Lawrence: what is this?
     // compact(): any;
 }
 
-// TODO: it's unclear to me now at what point the throws happens on the various accessors; I guess it's no longer on the things that just return another path? so have removed those there
+// Lawrence: it's unclear to me now at what point the throws happens on the various accessors; I guess it's no longer on the things that just return another path?
 
 public protocol LiveMapPathObjectCollectionMethods {
     var entries: [(key: String, value: any UnionPathObject)] { get }
@@ -59,7 +56,7 @@ public protocol LiveMapPathObject:
     // The next path segment in a LiveMap is identified with a string key.
     func get(key: String) -> any UnionPathObject
 
-    // TODO: can this throw if it's not a LiveMap at that path?
+    // Lawrence: can this throw if it's not a LiveMap at that path?
     // Obtain the specific instance currently at this path.
     // If the path does not resolve to any specific instance, returns `undefined`.
     var instance: (any LiveMapInstance)? { get }
@@ -83,7 +80,7 @@ public protocol LiveListPathObject:
     // The next path segment in a LiveList is identified with a number index.
     func get(at: Int) -> any UnionPathObject
 
-    // TODO: ditto re throwing
+    // Lawrence: ditto re throwing
     // Obtain the specific instance currently at this path.
     // If the path does not resolve to any specific instance, returns `undefined`.
     var instance: (any LiveListInstance)? { get }
@@ -96,7 +93,7 @@ public protocol LiveCounterPathObject:
     LiveCounterOperations,
     PathObjectRuntimeTypeAssertions
 {
-    // TODO: unclear to me whether this throws or not (the "returns undefined" seems to contradict the comment above LiveCounterOperations conformance)
+    // Lawrence: unclear to me whether this throws or not (the "returns undefined" seems to contradict the comment above LiveCounterOperations conformance; unless there's meant to be some distinction in how we treat read and write operations?)
     // Get the current value of the counter instance currently at this path.
     // If the path does not resolve to any specific instance, returns `undefined`.
     var value: Double? { get }
@@ -106,7 +103,7 @@ public protocol LiveCounterPathObject:
     var instance: (any LiveCounterInstance)? { get }
 }
 
-// TODO: we probably aren't going to have "extends Primitive" so we can't do the static return type for `encoding`; maybe consider unrolling Primitive's cases into different generic type arguments?
+// Lawrence: we probably aren't going to have "extends Primitive" so we can't do the static return type for `encoding`; I initially considered unrolling Primitive's cases into different generic type arguments but decided just to make the method always available but return nil if not string-or-buffer
 public protocol PrimitivePathObject:
     PathObjectBase<Primitive>,
     PathObjectRuntimeTypeAssertions
@@ -129,12 +126,10 @@ public protocol UnionPathObjectCollectionMethods {
     var size: Int { get }
 
     // LiveList collection methods
-    // TODO: Lawrence renamed because of clash, not sure how this works in TS
+    // Lawrence: renamed because of clash, not sure how this works in TS
     var listEntries: [any UnionPathObject] { get }
     var length: Int { get }
 }
-
-// TODO: Lawrence — should I have been removing the generic type parameters from the methods too?
 
 // When the underlying type of a PathObject is not known, provide a type
 // which defines all possible methods. The methods individually support type
@@ -154,7 +149,6 @@ public protocol UnionPathObject:
     // If the path does not resolve to any specific instance, returns `undefined`.
     var instance: (any UnionInstance)? { get }
 
-    // TODO: Lawrence — check that Primitive is the right thing to do here; the "number | Primitive" in the TS types really just collapses to Primitive AFAIK
     // Get the current value of the LiveCounter or primitive currently at this path.
     // If the path does not resolve to any specific entry, returns `undefined`.
     var value: Primitive? { get }

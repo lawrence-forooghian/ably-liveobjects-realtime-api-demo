@@ -65,7 +65,7 @@ func overview() async throws {
      // project.get("owner").value();
      */
 
-    // TODO: is that right? It also returns nil for a non-leaf entry
+    // Lawrence: is that right? It also returns nil for a non-leaf entry
     // If a key does not exist on a LiveMap, `value()` returns undefined.
     if project.get(key: "title").value == nil {
         print("title not set")
@@ -90,8 +90,6 @@ func overview() async throws {
     // You can also store JSON values as primitives.
     _ = project.get(key: "tags").value?.jsonArrayValue
     _ = project.get(key: "metadata").value?.jsonObjectValue
-
-    // TODO: are we sure that you're allowed to put binary data in our so-called "JSON values"?
 
     /*
      N/A for Swift:
@@ -132,7 +130,7 @@ func overview() async throws {
         value: .primitive(.data(Data())), // raw image data
         options: .init(encoding: "jpeg"),
     )
-    // TODO: why is `encoding` not on the union type? And we don't have any other way to get a PrimitivePathObject (the runtime assertions just give you the primitive value), so there's no way to get this encoding, needs fixing
+    // Lawrence: why is `encoding` not on the union type? And we don't have any other way to get a PrimitivePathObject (the runtime assertions just give you the primitive value), so there's no way to get this encoding, needs fixing
     // The encoding is stored on the entry, and can be accessed via the `encoding()` method.
     // Note that if no encoding was specified, it returns `undefined`.
     // project.get(key: "image").asPrimitive().encoding; // "jpeg"

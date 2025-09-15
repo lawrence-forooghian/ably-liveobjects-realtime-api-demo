@@ -1,4 +1,4 @@
-// TODO: Lawrence removed InstanceSubscriptionEvent because it seems unused
+// Lawrence: removed InstanceSubscriptionEvent because it seems unused
 
 // Runtime type assertion methods that can check the underlying value at
 // at an entry at runtime and throw an error if it is not the expected type.
@@ -6,7 +6,6 @@
 // of the object, so the type can be determined even if the object instance
 // can't (yet) be resolved.
 public protocol InstanceRuntimeTypeAssertions {
-    // TODO: When does the throwing happen?
     func asLiveMap() -> any LiveMapInstance
     func asLiveList() -> any LiveListInstance
     func asLiveCounter() -> any LiveCounterInstance
@@ -17,18 +16,17 @@ public protocol InstanceRuntimeTypeAssertions {
 // that are present regardless of the underlying type, which specified
 // in type parameter T.
 public protocol InstanceBase<EventData>: Subscribable {
-    // TODO: what if the instance is a primitive? then there isn't an ID?
     // the object ID of this instance
     var id: String { get }
 
     var objectMetadata: ObjectMetadata? { get }
     var entryMetadata: EntryMetadata? { get }
 
-    // TODO: what is this
+    // Lawrence: Not sure what this is
     // compact(): any;
 }
 
-// TODO: as in pathobjects.swift it's unclear to me what can throw but I assume that these ones can
+// Lawrence: as in pathobjects.swift it's unclear to me what can throw but I assume that these ones can
 
 public protocol LiveMapInstanceCollectionMethods {
     var entries: [(key: String, value: any UnionInstance)] { get }
@@ -71,13 +69,12 @@ public protocol LiveCounterInstance:
     LiveCounterOperations,
     InstanceRuntimeTypeAssertions
 {
-    // TODO: what does this "leaf type" thing mean? ditto elsewhere? I thought that once you had an instance, then the type is known
+    // Lawrence: what does this "leaf type" comment mean? Ditto in PrimitiveInstance. I thought that once you had an instance, then the type is known
     // Get the current value of the counter instance.
     // Returns undefined if the current instance is not a leaf type.
     var value: Double? { get }
 }
 
-// TODO: same question as on PrimitivePathObject re specialising static interface based on Primitive case
 public protocol PrimitiveInstance:
     InstanceBase<Primitive>,
     InstanceRuntimeTypeAssertions
@@ -100,7 +97,7 @@ public protocol UnionInstanceCollectionMethods {
     var size: Int { get }
 
     // LiveList collection methods
-    // TODO: Lawrence renamed because of clash, not sure how this works in TS
+    // Lawrence: renamed because of clash, not sure how this works in TS
     var listEntries: [any UnionInstance] { get }
     var length: Int { get }
 }
@@ -116,7 +113,6 @@ public protocol UnionInstance:
     func get(at key: String) -> any UnionInstance
     func get(at index: Int) -> any UnionInstance
 
-    // TODO: Lawrence — check that Primitive is the right thing to do here; the "number | Primitive" in the TS types really just collapses to Primitive AFAIK
     // Get the current value of the LiveCounter or primitive currently at this entry.
     // If the entry does not exist, returns `undefined`.
     var value: Primitive? { get }
